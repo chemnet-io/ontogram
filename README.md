@@ -1,3 +1,8 @@
+# Changes in this fork:
+
+- updated RDF:Property to be OWL:ObjectProperty to successfully draw the property connections.
+
+
 # Ontogram
 
 [![PyPI version](https://badge.fury.io/py/ontogram.svg)](https://badge.fury.io/py/ontogram)
@@ -22,6 +27,7 @@ Install via PyPI for Python 3.
 pip3 install ontogram
 ```
 
+ATTENTION: Musst replace __init__.py with the one in the fork to make OWL:ObjectProperty work
 
 ## Usage
 
