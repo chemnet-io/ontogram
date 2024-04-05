@@ -113,18 +113,18 @@ def _get_class_definition(g):
 
         plant_uml += f'Class "{prefix}:{class_name}" [[{str(owl_class)}]] {{\n'
 
-        for rdf_property, _, _ in g.triples((None, RDFS.domain, owl_class)):
-            for _, _, rdfs_range_value in g.triples((rdf_property, RDFS.range, None)):
+        for owl_objectproperty, _, _ in g.triples((None, RDFS.domain, owl_class)):
+            for _, _, rdfs_range_value in g.triples((owl_objectproperty, RDFS.range, None)):
                 if not rdfs_range_value in classes:
-                    rdf_property_namespace = _get_uri_namespace(rdf_property)
-                    rdf_property_prefix = _get_uri_prefix(rdf_property_namespace, g)
-                    rdf_property_name = _get_last_segment_of_uri(rdf_property)
+                    owl_objectproperty_namespace = _get_uri_namespace(owl_objectproperty)
+                    owl_objectproperty_prefix = _get_uri_prefix(owl_objectproperty_namespace, g)
+                    owl_objectproperty_name = _get_last_segment_of_uri(owl_objectproperty)
 
                     rdfs_range_namespace = _get_uri_namespace(rdfs_range_value)
                     rdfs_range_property_prefix = _get_uri_prefix(rdfs_range_namespace, g)
                     rdfs_range_property_name = _get_last_segment_of_uri(rdfs_range_value)
 
-                    plant_uml += f'[[{rdf_property} {rdf_property_prefix}:{rdf_property_name}]] : [[{rdfs_range_value} {rdfs_range_property_prefix}:{rdfs_range_property_name}]]\n'
+                    plant_uml += f'[[{owl_objectproperty} {owl_objectproperty_prefix}:{owl_objectproperty_name}]] : [[{rdfs_range_value} {rdfs_range_property_prefix}:{rdfs_range_property_name}]]\n'
 
         plant_uml += '}\n'
 
@@ -173,23 +173,23 @@ def _get_outgoing_relationship(g):
 
     classes = _get_classes(g)
 
-    for rdf_property, _, _ in g.triples((None, RDF.type, RDF.Property)):
-        for _, _, rdfs_domain in g.triples((rdf_property, RDFS.domain, None)):
-            for _, _, rdfs_range in g.triples((rdf_property, RDFS.range, None)):
+    for owl_objectproperty, _, _ in g.triples((None, RDF.type, OWL.ObjectProperty)):
+        for _, _, rdfs_domain in g.triples((owl_objectproperty, RDFS.domain, None)):
+            for _, _, rdfs_range in g.triples((owl_objectproperty, RDFS.range, None)):
                 if rdfs_range in classes:
                     domain_namespace = _get_uri_namespace(rdfs_domain)
                     domain_prefix = _get_uri_prefix(domain_namespace, g)
                     domain_name = _get_last_segment_of_uri(rdfs_domain)
 
-                    relationship_namespace = _get_uri_namespace(rdf_property)
+                    relationship_namespace = _get_uri_namespace(owl_objectproperty)
                     relationship_prefix = _get_uri_prefix(relationship_namespace, g)
-                    relationship_name = _get_last_segment_of_uri(rdf_property)
+                    relationship_name = _get_last_segment_of_uri(owl_objectproperty)
 
                     range_namespace = _get_uri_namespace(rdfs_range)
                     range_prefix = _get_uri_prefix(range_namespace, g)
                     range_name = _get_last_segment_of_uri(rdfs_range)
 
-                    plant_uml += f'"{domain_prefix}:{domain_name}" --> "{range_prefix}:{range_name}" : "[[{str(rdf_property)} {relationship_prefix}:{relationship_name}]]"\n'
+                    plant_uml += f'"{domain_prefix}:{domain_name}" --> "{range_prefix}:{range_name}" : "[[{str(owl_objectproperty)} {relationship_prefix}:{relationship_name}]]"\n'
                 break
             break
 
